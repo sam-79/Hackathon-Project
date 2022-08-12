@@ -53,3 +53,7 @@ buck-out/
 .expo/
 web-build/
 dist/
+
+# api keys
+.env  
+@sam-79__SIH.bak.jks

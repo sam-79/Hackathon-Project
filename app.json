@@ -5,6 +5,23 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your community."
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.sam79.SIH",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA2_6bB98Cqey7VGDtpOIl-46ZpqLkBe1M"
+        }
+      }
+    }
+    
   }
 }

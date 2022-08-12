@@ -1,5 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import React, {useContext} from 'react';
+import { StyleSheet, Text, View, ScrollView, Image, Button } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
 
 // list of items
 var disasterArr = [
@@ -31,10 +32,14 @@ var disasterArr = [
 
 ]
 export default function Tips() {
+
+    const { logOut } = useContext(AuthContext);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}><Text>Tips for You</Text></View>
-            <ScrollView style={styles.scrollView}>
+
+            {/* <ScrollView style={styles.scrollView}>
 
 
 
@@ -47,7 +52,10 @@ export default function Tips() {
                 })}
 
 
-            </ScrollView>
+            </ScrollView> */}
+            <Button title='Log Out' onPress={logOut} />
+
+
         </View>
     )
 }
