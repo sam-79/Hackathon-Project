@@ -1,7 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
-
+import { DJANGO_API_ENDPOINT } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+
+console.log(`${DJANGO_API_ENDPOINT}/api/user/login/`)
+
+
 
 export const AuthContext = createContext();
 
@@ -30,7 +34,7 @@ export const AuthProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/user/register/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/user/register/`, requestOptions)
             .then(response => response.json())
             .then(async (data) => {
 
@@ -76,8 +80,8 @@ export const AuthProvider = ({ children }) => {
             body: raw,
             redirect: 'follow'
         };
-
-        fetch("https://floodmanagement.herokuapp.com/api/user/login/", requestOptions)
+        
+        fetch(`${DJANGO_API_ENDPOINT}/api/user/login/`, requestOptions)
             .then(response => response.json())
             .then(async (data) => {
 
@@ -154,7 +158,7 @@ export const AuthProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/user/profile/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/user/profile/`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 // setUserInfo(data);

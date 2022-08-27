@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import {DJANGO_API_ENDPOINT} from "@env";
 
 import { Alert, Platform } from 'react-native';
 
@@ -8,13 +9,13 @@ export const CrowdProvider = ({ children }) => {
 
     const [crowdData, setCrowdData] = useState(null);
     const [userCrowdData, setUserCrowdData] = useState(null);
-    const [isLoading,setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
 
     const getCrowdData = (token) => {
-        
-        
+
+
         // let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU4NzY0MTA5LCJpYXQiOjE2NTg3NjI5MDksImp0aSI6IjcyOWRjZWRmYWMxMTQ2Y2E5ZmMzZjZlZmVlNGQzYWM1IiwidXNlcl9pZCI6MX0.z877kvgmyhXMwPM2VcCh2G3FHKw9UVe-jUMlO6Gwf0Y"
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
@@ -26,7 +27,7 @@ export const CrowdProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/crowdsource/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/crowdsource/`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log("server resp", data);
@@ -64,13 +65,16 @@ export const CrowdProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/crowdsource/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/crowdsource/`, requestOptions)
             .then(response => response.json())
             .then(result => {
                 setIsLoading(false);
-                Alert.alert("Submitted",`Data submitted \nid : ${result.id} \nCreated at : ${result.created_at}`)
+                Alert.alert("Submitted", `Data submitted \nid : ${result.id} \nCreated at : ${result.created_at}`)
             })
-            .catch(error => Alert.alert('error', String(error)));
+            .catch(error => {
+                setIsLoading(false);
+                Alert.alert('error', String(error))
+            });
     }
 
     const getCurrentUserCrowdData = (token) => {
@@ -84,7 +88,7 @@ export const CrowdProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/crowdsourcelist/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/crowdsourcelist/`, requestOptions)
             .then(response => response.json())
             .then(result => setUserCrowdData(result))
             .catch(error => {
@@ -109,7 +113,7 @@ export const CrowdProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch(`https://floodmanagement.herokuapp.com/api/floodmanagement/crowdsourcedetails/${id}/`, requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/crowdsourcedetails/${id}/`, requestOptions)
             .then(response => response.text())
             .then(result => {
                 if (result.length == 0) {
@@ -135,20 +139,21 @@ export const CrowdProvider = ({ children }) => {
                 redirect: 'follow'
             };
 
-            fetch(`https://floodmanagement.herokuapp.com/api/floodmanagement/crowdsourcedetails/${id}/`, requestOptions)
+            fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/crowdsourcedetails/${id}/`, requestOptions)
                 .then(response => response.json())
-                .then(result => { 
+                .then(result => {
                     console.log(result)
-                    resolve(result) })
+                    resolve(result)
+                })
                 .catch(error => { reject(error) });
         })
-        
+
         return promise;
 
     }
 
 
     return (
-        <CrowdContext.Provider value={{ crowdData, getCrowdData, sendCrowdData, updateCrowdData, deleteCrowdData, getCrowdDataById, getCurrentUserCrowdData, userCrowdData , isLoading}}>{children}</CrowdContext.Provider>
+        <CrowdContext.Provider value={{ crowdData, getCrowdData, sendCrowdData, updateCrowdData, deleteCrowdData, getCrowdDataById, getCurrentUserCrowdData, userCrowdData, isLoading }}>{children}</CrowdContext.Provider>
     );
 };

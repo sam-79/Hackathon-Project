@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image } from 'react-native';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -31,7 +31,8 @@ function LiveWeather({ navigation }) {
 
             let data = { 'lat': value.coords.latitude, 'lon': value.coords.longitude };
             setCoordinates(data);
-            
+
+
             let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=ff78ba3dd77bfeb9345ba49644842507`);
 
             console.log(response.status); // 200
@@ -39,7 +40,7 @@ function LiveWeather({ navigation }) {
 
             if (response.status === 200) {
                 let data = await response.json();
-                console.log(data);
+                // console.log(data);
                 setWeatherData(data);
                 setLoading(false);
                 return !loading;
@@ -55,12 +56,11 @@ function LiveWeather({ navigation }) {
 
         let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=ff78ba3dd77bfeb9345ba49644842507`);
 
-        console.log(response.status); // 200
-        console.log(response.statusText); // OK
+        // console.log(response.status); // 200
+        // console.log(response.statusText); // OK
 
         if (response.status === 200) {
             let data = await response.json();
-            console.log(data);
             setWeatherData(data);
             setLoading(false);
             return !loading;
@@ -71,6 +71,46 @@ function LiveWeather({ navigation }) {
     }
 
 
+    const WeatherDataCard = (props) => {
+        return (
+            <View style={styles.weatherCard} >
+
+                <Text style={{ fontSize: 50, textAlign: 'center', color: '#fff' }}>
+                    {parseInt(props.data.main.temp)}°C
+                </Text>
+
+
+                <View style={{
+                    // backgroundColor: 'red',
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 20
+                }}>
+                    <View style={{}}>
+                        <Text>
+                            Feels like {props.data.main.feels_like}
+                        </Text>
+                        <Text>
+                            Humidity {props.data.main.humidity}
+                        </Text>
+                    </View>
+                    <View style={{}}>
+
+                        <Image source={{ uri: `https://openweathermap.org/img/wn/${props.data.weather[0].icon}@2x.png` }}
+                            style={{ width: 100, flex: 1 }} />
+                    </View>
+
+                </View>
+
+
+
+
+            </View>
+        )
+    }
+
     return (
         <View>
             <Pressable onPress={getWeatherData}>
@@ -80,13 +120,11 @@ function LiveWeather({ navigation }) {
             </Pressable>
 
             <ActivityIndicator size="large" animating={loading} />
-            {!loading ? <View>
-                <Text style={styles.subheading}>Latitude: {weatherData.coord.lat}</Text>
-                <Text style={styles.subheading}>Longitude: {weatherData.coord.lon},</Text>
-                <Text style={styles.subheading}>Place: {weatherData.name},</Text>
-                <Text style={styles.subheading}>Temp:  {weatherData.main.temp} C</Text>
+            {weatherData ?
+                <WeatherDataCard data={weatherData} />
+                :
+                console.log('loading')}
 
-            </View> : console.log('loading')}
 
         </View>
     )
@@ -108,6 +146,14 @@ const styles = StyleSheet.create({
     subheading: {
         fontSize: 20,
         textAlign: 'center'
+    },
+    weatherCard: {
+        backgroundColor: '#4f36e990',
+        marginHorizontal: 20,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 })
 

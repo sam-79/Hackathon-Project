@@ -106,9 +106,9 @@ function Contribute02() {
                 enablePanDownToClose={true}
                 backgroundStyle={styles.contentContainer}
             >
-                <View style={styles.contentContainer}>
+                {/* <View style={styles.contentContainer}> */}
                     <CustomCallout data={currentMarkerData} />
-                </View>
+                {/* </View> */}
             </BottomSheet>
 
 

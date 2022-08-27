@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Image, Alert, Modal, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Image, Alert, Modal, ActivityIndicator, ImageBackground } from 'react-native';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -13,8 +13,12 @@ import { Camera, CameraType } from 'expo-camera';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import CameraModel from './CameraModel';
+
+
 // import * as ImagePicker from 'expo-image-picker';
 function Contribute01() {
+
     //contexts for getting userToken and sending CrowdSource Post request
     const { userToken } = useContext(AuthContext);
     const { sendCrowdData, isLoading } = useContext(CrowdContext);
@@ -28,6 +32,7 @@ function Contribute01() {
         { label: 'Landslide', value: 'Landslide' },
         { label: 'Safehouse', value: 'Safehouse' }
     ]);
+
     //variables for storing user entered data 
     const [longitude, setLongitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
@@ -40,11 +45,6 @@ function Contribute01() {
     const [location, setLocation] = useState(null);
     const mapRef = useRef(null);
 
-    // for camera usage
-    const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    const [cameraType, setCameraType] = useState(CameraType.back);
-    const [capturedImage, setCapturedImage] = useState(null);
-    const cameraRef = useRef(null);
 
 
     //function to get User current location coordinates
@@ -60,56 +60,104 @@ function Contribute01() {
 
         }).catch(e => console.log(e));
     }
-
-
-    const [image, setImage] = useState(null);
-
-    // const pickImage = async () => {
-    //     // No permissions request is necessary for launching the image library
-    //     let result = await ImagePicker.launchCameraAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing: true,
-    //         aspect: [4, 3],
-    //         quality: 1,
-    //         exif: true,
-    //     });
-
-    //     //console.log(result);
-
-    //     // if (!result.cancelled) {
-    //     //     setImage(result);
-    //     // }
-
-    //     if (result.didCancel) {
-    //         Alert.alert("Error", "User Cancel Image Picker");
-    //     } else if (result.error) {
-    //         Alert.alert("Error", `Image Picker Error ${result.error}`);
-    //     } else if (result.customButton) {
-    //         console.log("custombtn")
-    //     } else if (!result.cancelled) {
-    //         setImage(result);
-    //     }
-
-
-    // };
-
     useEffect(() => {
         getCurrentLocation()
     }, [])
 
-    // Getting Permission to access Camera 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            setHasCameraPermission(status === 'granted');
-        })();
-    }, []);
 
-    if (hasCameraPermission === null) {
-        return <View />;
+
+
+    // // Getting Permission to access Camera 
+    // useEffect(() => {
+    //     (async () => {
+    //         const { status } = await Camera.requestCameraPermissionsAsync();
+    //         setHasCameraPermission(status === 'granted');
+    //     })();
+    // }, []);
+
+    // if (hasCameraPermission === null) {
+    //     return <View />;
+    // }
+    // if (hasCameraPermission === false) {
+    //     return <Text>No access to camera</Text>;
+    // }
+
+
+    // for camera usage
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    // const [cameraType, setCameraType] = useState(CameraType.back);
+    // const [capturedImage, setCapturedImage] = useState(null);
+    const [image, setImage] = useState(null);
+    const [previewVisible, setPreviewVisible] = useState(false)
+    const cameraRef = useRef(null);
+    const [captureSize, setCaptureSize] = useState(60)
+
+
+    const startCamera = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync()
+        if (status === 'granted') {
+            setHasCameraPermission(true)
+            setCaptureSize(60)
+        } else {
+            Alert.alert('Access denied')
+        }
     }
-    if (hasCameraPermission === false) {
-        return <Text>No access to camera</Text>;
+
+    const takePicture = async () => {
+        if (!cameraRef) return
+
+        setCaptureSize(0);
+        await cameraRef.current.takePictureAsync({ quality: 0.5, skipProcessing: true })
+            .then((photo) => {
+                setCaptureSize(50);
+                setPreviewVisible(true)
+                setImage(photo)
+            })
+            .catch((err) => Alert.alert("Error", `${err}`))
+    }
+
+    const CameraPreview = ({ photo }) => {
+        console.log('sdsfds', photo)
+        return (
+            <View
+                style={{
+                    backgroundColor: 'transparent',
+                    flex: 1,
+                    width: '100%',
+                    height: '100%'
+                }}
+            >
+                <ImageBackground source={{ uri: photo.uri }} resizeMode="cover" style={{
+                    flex: 1,
+                    justifyContent: "center"
+                }}>
+
+
+                    <View style={{
+                        position: 'absolute',
+                        bottom: 20,
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        backgroundColor: '#979595',
+                        width: '100%'
+                    }}>
+                        <Pressable onPress={() => {
+                            setPreviewVisible(false);
+                            setImage(null);
+                        }}>
+                            <Text style={{ fontSize: 25 }}>Retake</Text>
+                        </Pressable>
+                        <Pressable onPress={() => {
+                            setModalVisible(false);
+                        }}>
+                            <Text style={{ fontSize: 25 }}>Save</Text>
+                        </Pressable>
+                    </View>
+                </ImageBackground>
+
+
+            </View>
+        )
     }
 
 
@@ -117,7 +165,7 @@ function Contribute01() {
     return (
         <View style={{ flex: 1 }}>
 
-            {/* Modal for getting userLocation */}
+            {/* Modal for getting Camera Picture */}
             <Modal
                 animationType="slide"
                 transparent={false}
@@ -126,80 +174,53 @@ function Contribute01() {
                     Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}
-                onShow={getCurrentLocation}
+                onShow={() => startCamera()}
             >
 
-                <View style={[styles.container, { margin: 10 }]}>
-                    <Pressable onPress={() => { setModalVisible(false) }} >
+                <View style={styles.container}>
+                    <Pressable onPress={() => {
+                        setPreviewVisible(false);
+                        setImage(null);
+                        setModalVisible(false);
+                    }} >
                         <View>
                             <MaterialCommunityIcons name='close-thick' size={40} />
                         </View>
                     </Pressable>
+
                     {
-                        capturedImage !== null ?
-                            (
-                                <View style={{ flex: 1, justifyContent:'center',alignItems:'center'}}>
-                                    <Image style={{ justifyContent: 'center', height: 300, width: 300 }}
-                                        source={{ uri: capturedImage.uri }} />
-                                    <View style={
-                                        {
-                                            height: 30, width: '100%', justifyContent: 'space-around', backgroundColor: 'yellow',
-                                            flexDirection: 'row',margin:50
-                                        }
-                                    }>
-
-                                        <Pressable onPress={() => {
-                                            setCapturedImage(null);
-                                        }} style={{ backgroundColor: "red", height: 20 }}>
-                                            <Text>Retake</Text>
+                        hasCameraPermission ?
+                            (previewVisible && image) ? (
+                                <CameraPreview photo={image} />
+                            ) :
+                                (
+                                    <Camera ref={cameraRef} style={{ width: '100%', flex: 1 }}>
+                                        <Pressable style={{
+                                            position: 'absolute',
+                                            bottom: 20,
+                                            width: "100%",
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                        }} onPress={() => takePicture()}>
+                                            <MaterialCommunityIcons name='circle-slice-8' size={captureSize} color="white" />
                                         </Pressable>
-                                        <Pressable onPress={() => {
-                                            setImage(capturedImage)
-                                            setModalVisible(false)
-                                            setCapturedImage(null)
-                                        }} style={{ backgroundColor: "red", height: 20 }}>
-                                            <Text>Save</Text>
-                                        </Pressable>
-                                    </View>
-                                </View>
-                            )
-                            : (
-                                <Camera ref={cameraRef} style={{ flex: 1, height: "100%", width: "100%" }} type={cameraType}>
-                                    <View style={
-                                        {
-                                            height: 30, width: '100%', position: 'absolute', bottom: 50, justifyContent: 'space-around', backgroundColor: 'yellow',
-                                            flexDirection: 'row'
-                                        }
-                                    }>
-                                        {/* <MaterialCommunityIcons name='refresh' color='#fff' size={30} /> */}
-                                        <Pressable onPress={async () => {
-                                            cameraRef.current.takePictureAsync({ base64: true })
-                                                .then((img) => {
-                                                    // cameraRef.current.pausePreview()
-                                                    console.log("img cap")
-                                                    console.log(img.uri)
-                                                    setCapturedImage(img);
+                                    </Camera>
+                                )
+                            :
+                            <View>
+                                <Text>Camera Permission Not Allowed</Text>
+                            </View>
 
-                                                }).catch(err => Alert.alert("error", `${err}`))
-                                        }}>
-                                            <Text>Capture</Text>
-                                        </Pressable>
-
-                                        <Pressable onPress={() => {
-                                            setCameraType(cameraType === CameraType.back ? CameraType.front : CameraType.back);
-                                        }}>
-                                            <Text>Flip</Text>
-                                        </Pressable>
-
-                                    </View>
-                                </Camera>
-                            )
                     }
+
 
 
                 </View>
 
             </Modal>
+
+
+
 
 
             <MapView ref={mapRef} style={styles.map} initialRegion={{
@@ -253,7 +274,7 @@ function Contribute01() {
                 backgroundColor: '#ffffff',
             }]}>
                 <DropDownPicker
-                    placeholder="Select Category"
+                    placeholder="Select Data Category"
                     open={open}
                     value={category}
                     items={items}
@@ -275,7 +296,7 @@ function Contribute01() {
                         image === null ?
                             <Pressable onPress={() => setModalVisible(true)} style={styles.textinput}>
                                 <View>
-                                    <Text style={{ textAlign: "center" }}>Capture Image</Text>
+                                    <Text style={{ textAlign: "center" }}>Capture Image <MaterialCommunityIcons name="camera" size={20} /> </Text>
                                 </View>
                             </Pressable>
                             :
@@ -288,23 +309,28 @@ function Contribute01() {
                 </View>
             </View>
 
-            <Pressable style={[styles.form, {
-                bottom: 20,
-                left: 50,
-                right: 50,
-                height: 40,
-                backgroundColor: "red",
-                borderRadius: 10
-            }]} onPress={() => sendCrowdData(userToken.token.access, longitude, latitude, category, description, image)}>
-                <View>
-                    {
-                        isLoading ?
-                            <ActivityIndicator animating={isLoading} size="large" />
-                            :
+
+
+            {
+                isLoading ?
+                    <View>
+                        <ActivityIndicator animating={isLoading} size="large" />
+                    </View>
+                    :
+                    <Pressable style={[styles.form, {
+                        bottom: 20,
+                        left: 50,
+                        right: 50,
+                        height: 40,
+                        backgroundColor: "#f93154",
+                        borderRadius: 10
+                    }]} onPress={() => sendCrowdData(userToken.token.access, longitude, latitude, category, description, image)}>
+                        <View>
                             <Text style={{ fontSize: 20, color: "white" }}>Submit</Text>
-                    }
-                </View>
-            </Pressable>
+                        </View>
+                    </Pressable>
+            }
+
 
         </View >
     )
@@ -316,7 +342,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 10
     },
     inputArea: {
         width: '100%',

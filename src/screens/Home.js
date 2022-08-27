@@ -1,132 +1,98 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Pressable, FlatList, Dimensions } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useContext, } from 'react';
+import { StyleSheet,Alert } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Notifications from '../components/Notifications';
 import Dashboard from '../components/Dashboard';
 import LiveWeather from '../components/LiveWeather';
-import IMDForecast from "../components/IMDForecast";
+import Inundation from "../components/Inundation";
 import FloodForecast from "../components/FloodForecast";
 import SafetyTips from "../components/SafetyTips";
 import EmergencyContacts from "../components/EmergencyContact";
 
+import Help from './Help';
+import Contribute from './Contribute';
+import Tips from './Tips';
+import SOS from '../components/SOS';
 
-const Stack = createStackNavigator();
+import CustomDrawer from '../components/CustomDrawer';
 
 
-export default function Home() {
+import { AuthContext } from '../context/AuthContext';
 
 
-    // var markersArray = [];
 
-    // const mapCircle = () => {
-    //     for (let i in flood_data) {
-    //         const district = i;
-    //         const location = `${district} ${flood_data[i].State}`
-    //         const condition = flood_data[i].Flood_Condition
-    //         const latlon = flood_data[i].chords
-    //         markersArray.push({ place: location, chords: latlon, condition: condition })
-    //         // console.log(markersArray)
-    //     }
-    // }
+// creating Drawer navigation TAB object
+const DrawerTab = createDrawerNavigator();
+
+export default function DrawerNavigation(params) {
+    const { getUserDetails, userInfo, userToken } = useContext(AuthContext);
+    {
+        if (!userInfo) {
+            try {
+                let resp = getUserDetails(userToken.token.access);
+                console.log("resp", resp)
+            } catch (e) { Alert.alert('Error', String(e)) }
+        }
+    }
 
     return (
-        // <MapView style={styles.map} region={{
-        //     latitude: 20.5937,
-        //longitude: 78.9629,
-        //     latitudeDelta: 25,
-        //     longitudeDelta: 25,
-        // }}>
-
-        //     <MapView.Circle
-        //   center={{
-        //     latitude: 20.5937,
-        //     longitude: 78.9629,
-        //   }}
-        //   radius={20000}
-        //   fillColor={"red"}
-        // />
-
-        //     {mapCircle()}
-
-
-        //     {markersArray.map((marker, index) => {
-
-        //         return (
-        //             <Circle key={index} center={{ latitude: marker.chords.latitude, longitude: marker.chords.longitude,
-        //                 latitudeDelta: 5,
-        //                 longitudeDelta: 5, }} radius={20000} fillColor={"#d320208a"}>
-        //                 <Marker key={index} coordinate={{ latitude: marker.chords.latitude, longitude: marker.chords.longitude }} fillColor={"red"}>
-
-
-        //                 <Callout>
-        //                     <View>
-        //                         <Text>City: {marker.place}</Text>
-        //                         <Text>Condition: {marker.condition}</Text>
-        //                     </View>
-        //                 </Callout>
-
-
-        //                 </Marker>
-        //             </Circle>
-        //         )
-        //     })}
-
-
-        // </MapView>
-
-
-
-
-        <Stack.Navigator
+        <DrawerTab.Navigator
             initialRouteName="Dashboard"
-
+            backBehavior='history'
             screenOptions={{
-                headerShown: false,
-                headerMode: 'screen',
-                headerTintColor: 'white',
-                headerStyle: { backgroundColor: '#007aff', borderBottomStartRadius: 30, borderBottomEndRadius: 30 },
-                headerTitleAlign: 'center',
-                headerStatusBarHeight: 0,
-                headerRight: (prop) => { return (<Pressable onPress={(prop) => console.log(prop)} style={{ marginRight: 15 }} ><View><MaterialCommunityIcons name="bell-outline" color={'white'} size={25} /></View></Pressable>) },
+                headerStyle: {
+                    backgroundColor: '#6FD1F9',
+                    elevation: 0,
+                },
+                headerTitleStyle: {
+                    color: "white"
+                },
             }}
+            drawerContent={(props) => <CustomDrawer {...props} />}
+
         >
-            <Stack.Screen
+
+            <DrawerTab.Screen name="SIH HELP REQUEST" component={Help} />
+
+            <DrawerTab.Screen name="CROWDSOURCE" component={Contribute} />
+
+            <DrawerTab.Screen name="TIPS" component={Tips} />
+
+            <DrawerTab.Screen
                 name="Dashboard"
                 component={Dashboard}
-                options={{
-                    title: 'SIH',
-                }}
             />
 
-            <Stack.Screen name='Notifications'
+            <DrawerTab.Screen name='Notifications'
                 component={Notifications}
             />
 
-            <Stack.Screen name='LiveWeather'
+            <DrawerTab.Screen name='LiveWeather'
                 component={LiveWeather}
             />
-
-            <Stack.Screen name='IMDForecast'
-                component={IMDForecast}
+            <DrawerTab.Screen name='SOS'
+                component={SOS}
             />
 
-            <Stack.Screen name='FloodForecast'
+            <DrawerTab.Screen name='Inundation'
+                component={Inundation}
+            />
+
+            <DrawerTab.Screen name='FloodForecast'
                 component={FloodForecast}
             />
 
-            <Stack.Screen name='SafetyTips'
+            <DrawerTab.Screen name='Safety Tips'
                 component={SafetyTips}
             />
 
-            <Stack.Screen name='EmergencyContacts'
+            <DrawerTab.Screen name='EmergencyContacts'
                 component={EmergencyContacts}
             />
-        </Stack.Navigator>
+        </DrawerTab.Navigator >
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {

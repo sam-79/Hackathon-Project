@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { Alert } from 'react-native';
 import { CrowdContext } from './CrowdSource';
+import { DJANGO_API_ENDPOINT } from "@env";
 
 export const HelpContext = createContext();
 
@@ -9,10 +10,13 @@ export const HelpProvider = ({ children }) => {
 
     const [userRequestData, setUserRequestData] = useState(null);
     const [allRequestData, setAllRequestData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     // send Request
     const sendRequestData = (token, latitude, longitude, TypeOfEmergency) => {
+        setIsLoading(true);
+
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -31,10 +35,16 @@ export const HelpProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/help/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/help/`, requestOptions)
             .then(response => response.text())
-            .then(result => Alert.alert("resp", String(result)))
-            .catch(error => console.log('error', error));
+            .then(result => {
+                setIsLoading(false);
+                Alert.alert("resp", String(result))
+            })
+            .catch(error => {
+                setIsLoading(false);
+                console.log('error', error)
+            });
     }
 
     // Get all request data submitted by logged in user
@@ -50,7 +60,7 @@ export const HelpProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/helplist/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/helplist/`, requestOptions)
             .then(response => response.json())
             .then(result => setUserRequestData(result))
             .catch(error => console.log('error', error));
@@ -69,7 +79,7 @@ export const HelpProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch("https://floodmanagement.herokuapp.com/api/floodmanagement/help/", requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/help/`, requestOptions)
             .then(response => response.json())
             .then(result => setAllRequestData(result))
             .catch(error => console.log('error', error));
@@ -87,13 +97,13 @@ export const HelpProvider = ({ children }) => {
             redirect: 'follow'
         };
 
-        fetch(`https://floodmanagement.herokuapp.com/api/floodmanagement/helpdetails/${id}/`, requestOptions)
+        fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/helpdetails/${id}/`, requestOptions)
             .then(response => response.text())
             .then(result => {
-                if(result.length == 0){
-                    Alert.alert("Deleted","Request Successfully Deleted")
-                }else{
-                    Alert.alert("Error","Request Not Deleted")
+                if (result.length == 0) {
+                    Alert.alert("Deleted", "Request Successfully Deleted")
+                } else {
+                    Alert.alert("Error", "Request Not Deleted")
                 }
             })
             .catch(error => console.log('error', error));
@@ -111,18 +121,21 @@ export const HelpProvider = ({ children }) => {
                 redirect: 'follow'
             };
 
-            fetch(`https://floodmanagement.herokuapp.com/api/floodmanagement/helpdetails/${id}/`, requestOptions)
+            fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/helpdetails/${id}/`, requestOptions)
                 .then(response => response.json())
-                .then(result => { resolve(result) })
+                .then(result => {
+                    console.log(result)
+                    resolve(result)
+                })
                 .catch(error => { reject(error) });
         })
-        
+
         return promise;
 
     }
 
     return (
-        <HelpContext.Provider value={{ sendRequestData, getCurrentUserRequestData, getRequestData, deleteRequestData,getRequestDataById , userRequestData, allRequestData }}>
+        <HelpContext.Provider value={{ sendRequestData, getCurrentUserRequestData, getRequestData, deleteRequestData, getRequestDataById, userRequestData, allRequestData, isLoading }}>
             {children}
         </HelpContext.Provider>
     )

@@ -45,8 +45,7 @@ function Help1() {
 
     return (
         <View style={styles.container}>
-
-
+            
             <MapView ref={mapRef} style={styles.map} initialRegion={{
                 latitude: 20.5937,
                 longitude: 78.9629,

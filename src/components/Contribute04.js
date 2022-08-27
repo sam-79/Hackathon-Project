@@ -9,7 +9,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { CrowdContext } from '../context/CrowdSource';
 import { AuthContext } from '../context/AuthContext';
 
-import CustomCallout from './CustomCallout';
+import {CustomCrowdCallout} from './CustomCallout';
 
 function Contribute04() {
     //Refenence to MapView Component
@@ -23,7 +23,7 @@ function Contribute04() {
     const { getCrowdData, crowdData, getCrowdDataById } = useContext(CrowdContext);
     const { userToken, setUserToken } = useContext(AuthContext);
 
-    const [selectedMarker, setSelectedMarker] = useState(null);
+    
     const [markerData, setMarkerData] = useState(null)
 
 
@@ -107,9 +107,9 @@ function Contribute04() {
                 backgroundStyle={styles.contentContainer}
                 style={{ margin: 5 }}
             >
-                <View style={styles.contentContainer}>
-                    <CustomCallout data={markerData} />
-                </View>
+                {/* <View style={styles.contentContainer}> */}
+                    <CustomCrowdCallout data={markerData} />
+                {/* </View> */}
             </BottomSheet>
 
         </View>
@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'red'
     },
 
 });
