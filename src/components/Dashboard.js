@@ -3,6 +3,8 @@ import { StyleSheet, Dimensions, View, Text, FlatList, Pressable, Image } from "
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from "../context/AuthContext";
 import * as Location from 'expo-location';
+import { weatherAPIKey } from "@env";
+
 
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
@@ -59,7 +61,7 @@ export default function Dashboard({ navigation }) {
 
 
 
-            let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=ff78ba3dd77bfeb9345ba49644842507`);
+            let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=${weatherAPIKey}`);
 
             console.log(response.status); // 200
             console.log(response.statusText); // OK

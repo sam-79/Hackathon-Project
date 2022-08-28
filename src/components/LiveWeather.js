@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, Image } from 'react-native';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
+import { weatherAPIKey } from "@env";
 
 
 function LiveWeather({ navigation }) {
@@ -33,7 +34,7 @@ function LiveWeather({ navigation }) {
             setCoordinates(data);
 
 
-            let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=ff78ba3dd77bfeb9345ba49644842507`);
+            let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=${weatherAPIKey}`);
 
             console.log(response.status); // 200
             console.log(response.statusText); // OK
@@ -54,7 +55,7 @@ function LiveWeather({ navigation }) {
 
     async function getWeatherData() {
 
-        let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=ff78ba3dd77bfeb9345ba49644842507`);
+        let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${weatherAPIKey}`);
 
         // console.log(response.status); // 200
         // console.log(response.statusText); // OK
