@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import {DJANGO_API_ENDPOINT} from "@env";
+import { DJANGO_API_ENDPOINT } from "@env";
 
 import { Alert, Platform } from 'react-native';
 
@@ -16,7 +16,6 @@ export const CrowdProvider = ({ children }) => {
     const getCrowdData = (token) => {
 
 
-        // let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU4NzY0MTA5LCJpYXQiOjE2NTg3NjI5MDksImp0aSI6IjcyOWRjZWRmYWMxMTQ2Y2E5ZmMzZjZlZmVlNGQzYWM1IiwidXNlcl9pZCI6MX0.z877kvgmyhXMwPM2VcCh2G3FHKw9UVe-jUMlO6Gwf0Y"
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -44,7 +43,7 @@ export const CrowdProvider = ({ children }) => {
 
         var myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
-
+        console.log(token)
         myHeaders.append('Content-Type', 'multipart/form-data');
 
         var formdata = new FormData();

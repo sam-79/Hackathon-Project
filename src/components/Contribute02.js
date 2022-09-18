@@ -32,7 +32,8 @@ function Contribute02() {
 
     // callbacks
     const handleSheetChanges = useCallback((index) => {
-        console.log('handleSheetChanges', index);
+        // Function called when bottomSheet points changes
+        // console.log('handleSheetChanges', index);
     }, []);
 
 

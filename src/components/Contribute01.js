@@ -58,7 +58,7 @@ function Contribute01() {
             setLongitude(String(value.coords.longitude))
             setLatitude(String(value.coords.latitude))
 
-        }).catch(e => console.log(e));
+        }).catch(e => Alert.alert("Error",`${e}`));
     }
     useEffect(() => {
         getCurrentLocation()
@@ -117,7 +117,6 @@ function Contribute01() {
     }
 
     const CameraPreview = ({ photo }) => {
-        console.log('sdsfds', photo)
         return (
             <View
                 style={{
@@ -250,9 +249,10 @@ function Contribute01() {
                 left: 50,
                 right: 50,
                 height: 40,
-                borderRadius: 10
+                borderRadius: 10,
+                backgroundColor:'#f3f2ef'
             }]}>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", }}>
                     <MaterialCommunityIcons name='map-marker' color={"red"} size={30} />
 
                     {location ?

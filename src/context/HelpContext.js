@@ -34,9 +34,10 @@ export const HelpProvider = ({ children }) => {
             body: raw,
             redirect: 'follow'
         };
-
+        console.log(`${DJANGO_API_ENDPOINT}/api/floodmanagement/help/`)
+        
         fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/help/`, requestOptions)
-            .then(response => response.text())
+        .then(response => response.text())
             .then(result => {
                 setIsLoading(false);
                 Alert.alert("resp", String(result))

@@ -9,12 +9,12 @@ function LiveWeather({ navigation }) {
 
     useFocusEffect(
         useCallback(() => {
-            console.log('Screen was focused');
+            // console.log('Screen was focused');
             // Do something when the screen is focused
             getLocation();
 
             return () => {
-                console.log('Screen was unfocused');
+                // console.log('Screen was unfocused');
                 // Do something when the screen is unfocused
                 // Useful for cleanup functions
             };
@@ -36,8 +36,7 @@ function LiveWeather({ navigation }) {
 
             let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=${weatherAPIKey}`);
 
-            console.log(response.status); // 200
-            console.log(response.statusText); // OK
+            
 
             if (response.status === 200) {
                 let data = await response.json();

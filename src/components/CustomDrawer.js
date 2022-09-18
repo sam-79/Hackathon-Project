@@ -24,7 +24,7 @@ function CustomDrawer(props) {
                     height: 200,
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    paddingLeft : 20
+                    paddingLeft: 20
 
                 }}
             >
@@ -47,6 +47,14 @@ function CustomDrawer(props) {
                 backgroundColor: '#fff',
                 paddingTop: 10
             }}>
+
+                <DrawerItem
+                    label="Notifications"
+                    onPress={() => props.navigation.navigate("Notifications")}
+                    icon={({ focused, size }) => (
+                        <MaterialCommunityIcons name='bell' size={25} />
+                    )}
+                />
 
                 <DrawerItem
                     label="Home"
@@ -79,7 +87,7 @@ function CustomDrawer(props) {
 
                 <DrawerItem
                     label="Helpline Number"
-                    onPress={() => props.navigation.navigate("Emergency Contact")}
+                    onPress={() => props.navigation.navigate("EmergencyContacts")}
                     icon={({ focused, size }) => (
                         <MaterialCommunityIcons name='phone' size={25} />
                     )}

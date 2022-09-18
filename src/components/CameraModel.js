@@ -16,7 +16,7 @@ export default function CameraModel() {
 
   const __startCamera = async () => {
     const { status } = await Camera.requestPermissionsAsync()
-    console.log(status)
+    // console.log(status)
     if (status === 'granted') {
       setStartCamera(true)
     } else {
@@ -25,7 +25,7 @@ export default function CameraModel() {
   }
   const __takePicture = async () => {
     const photo = await camera.takePictureAsync()
-    console.log(photo)
+    // console.log(photo)
     setPreviewVisible(true)
     //setStartCamera(false)
     setCapturedImage(photo)
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
 })
 
 const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
-  console.log('sdsfds', photo)
+  // console.log( photo)
   return (
     <View
       style={{

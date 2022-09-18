@@ -38,53 +38,12 @@ function StackNavigator(params) {
   );
 }
 
-// function BottomNavigation(params) {
-//   const { getUserDetails, userInfo, userToken } = useContext(AuthContext);
-//   {
-//     if (!userInfo) {
-//       try {
-//         let resp = getUserDetails(userToken.token.access);
-//         console.log("resp", resp)
-//       } catch (e) { Alert.alert('Error', String(e)) }
-//     }
-//   }
-
-
-//   return (
-//     <DrawerTab.Navigator
-//       screenOptions={{
-//         headerStyle: {
-//           backgroundColor: '#4f36e9',
-//           elevation:0,
-
-
-//         },
-//         headerTitleStyle: {
-//           color: "white"
-//         }
-//       }}
-//       drawerContent={(props) => <CustomDrawer {...props} />}
-
-//     >
-//       <DrawerTab.Screen name="HOME" component={Home}/>
-
-//       <DrawerTab.Screen name="SIH HELP REQUEST" component={Help} />
-
-//       <DrawerTab.Screen name="CROWDSOURCE" component={Contribute} />
-
-//       <DrawerTab.Screen name="TIPS" component={Tips}/>
-//     </DrawerTab.Navigator >
-//   )
-// }
 
 function MainNavigate(params) {
 
   //retrive userToken and userInfo from Context 
   const { userToken, userInfo } = useContext(AuthContext);
   
-  // console.log('token', userToken)
-  // console.log('info', userInfo)
-
   return (
     <NavigationContainer>
       {

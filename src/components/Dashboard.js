@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef, useMemo, useCallback } from "react";
-import { StyleSheet, Dimensions, View, Text, FlatList, Pressable, Image } from "react-native";
+import { StyleSheet, Dimensions, View, Text, FlatList, Pressable, Image, Alert } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from "../context/AuthContext";
 import * as Location from 'expo-location';
@@ -44,7 +44,9 @@ export default function Dashboard({ navigation }) {
 
     // callbacks
     const handleSheetChanges = useCallback((index) => {
-        console.log('handleSheetChanges', index);
+        // Function called when bottomSheet points changes
+        // console.log('handleSheetChanges', index);
+
     }, []);
 
 
@@ -63,8 +65,6 @@ export default function Dashboard({ navigation }) {
 
             let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&units=metric&appid=${weatherAPIKey}`);
 
-            console.log(response.status); // 200
-            console.log(response.statusText); // OK
 
             if (response.status === 200) {
                 let data = await response.json();
@@ -74,7 +74,8 @@ export default function Dashboard({ navigation }) {
                 return !loading;
 
             } else {
-                console.log(`${response}`)
+                Alert.alert("Error", `${response}`)
+                // console.log(`${response}`)
             }
         }
     }
@@ -88,7 +89,7 @@ export default function Dashboard({ navigation }) {
 
     return (
 
-        <View style={{ flex: 1, backgroundColor: '#6FD1F9', }}>
+        <View style={{ flex: 1, backgroundColor: '#3521b5', }}>
             {
                 weatherData ?
                     <View>
@@ -102,7 +103,7 @@ export default function Dashboard({ navigation }) {
                             padding: 20
                         }}>
                             <View style={{}}>
-                                <Text style={{ fontSize: 50, textAlign: 'center', color: 'black' }}>
+                                <Text style={{ fontSize: 50, textAlign: 'center', color: 'white' }}>
                                     {parseInt(weatherData.main.temp)}°C
                                 </Text>
                             </View>
@@ -115,7 +116,7 @@ export default function Dashboard({ navigation }) {
                                     <Image source={{ uri: `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png` }}
                                         style={{ width: 100, flex: 1, }} />
                                 </View>
-                                <Text style={{ color: 'black', textAlign: 'center', fontSize: 15 }}>{weatherData.weather[0].description}</Text>
+                                <Text style={{ color: 'white', textAlign: 'center', fontSize: 15 }}>{weatherData.weather[0].description}</Text>
                             </View>
                         </View>
 
@@ -125,7 +126,7 @@ export default function Dashboard({ navigation }) {
                             alignItems: 'center',
                             justifyContent: 'center',
                         }}>
-                            <Text style={{ fontSize: 25, color: 'black' }}>
+                            <Text style={{ fontSize: 25, color: 'white' }}>
                                 {weatherData.name}
                             </Text>
 
@@ -134,7 +135,7 @@ export default function Dashboard({ navigation }) {
                         {/* Horizontal Rule */}
                         <View style={{
                             borderWidth: 0.5,
-                            borderColor: 'black',
+                            borderColor: 'white',
                             margin: 10,
                         }} />
 
@@ -142,28 +143,28 @@ export default function Dashboard({ navigation }) {
 
                             <View style={styles.weatherDataField}>
                                 <View style={styles.weatherDataFieldText}>
-                                    <MaterialCommunityIcons name={'thermometer'} size={30} color='black' />
-                                    <Text style={{ color: 'black' }}>Min {weatherData.main.temp_min}°C</Text>
+                                    <MaterialCommunityIcons name={'thermometer'} size={30} color='white' />
+                                    <Text style={{ color: 'white' }}>Min {weatherData.main.temp_min}°C</Text>
                                 </View>
 
                                 <View style={styles.weatherDataFieldText}>
-                                    <MaterialCommunityIcons name={'thermometer'} size={30} color='black' />
-                                    <Text style={{ color: 'black' }}>Max {weatherData.main.temp_max}°C</Text>
+                                    <MaterialCommunityIcons name={'thermometer'} size={30} color='white' />
+                                    <Text style={{ color: 'white' }}>Max {weatherData.main.temp_max}°C</Text>
                                 </View>
                             </View>
 
                             <View style={styles.weatherDataField}>
                                 <View style={styles.weatherDataFieldText}>
-                                    <MaterialCommunityIcons name={'speedometer-medium'} size={30} color='black' />
-                                    <Text style={{ color: 'black' }}>Pressure {weatherData.main.pressure}hPa</Text>
+                                    <MaterialCommunityIcons name={'speedometer-medium'} size={30} color='white' />
+                                    <Text style={{ color: 'white' }}>Pressure {weatherData.main.pressure}hPa</Text>
                                 </View>
                                 <View style={styles.weatherDataFieldText}>
-                                    <MaterialCommunityIcons name={'waves-arrow-up'} size={30} color='black' />
-                                    <Text style={{ color: 'black' }}>Humidity {weatherData.main.humidity}%</Text>
+                                    <MaterialCommunityIcons name={'waves-arrow-up'} size={30} color='white' />
+                                    <Text style={{ color: 'white' }}>Humidity {weatherData.main.humidity}%</Text>
                                 </View>
                                 <View style={styles.weatherDataFieldText}>
-                                    <MaterialCommunityIcons name={'weather-windy'} size={30} color='black' />
-                                    <Text style={{ color: 'black' }}>Wind {weatherData.wind.speed}m/s</Text>
+                                    <MaterialCommunityIcons name={'weather-windy'} size={30} color='white' />
+                                    <Text style={{ color: 'white' }}>Wind {weatherData.wind.speed}m/s</Text>
                                 </View>
                             </View>
 
@@ -172,18 +173,12 @@ export default function Dashboard({ navigation }) {
                     </View>
 
                     :
-                    // <SkeletonContent
-                    //     containerStyle={{ flex: 1, width: 300 }}
-                    //     isLoading={loading}
-                    //     layout={[
-                    //         { key: 'someId', width: 220, height: 20, marginBottom: 6 },
-                    //         { key: 'someOtherId', width: 180, height: 20, marginBottom: 6 }
-                    //     ]}
-                    // >
-                    //     <Text style={styles.normalText}>Your content</Text>
-                    //     <Text style={styles.bigText}>Other content</Text>
-                    // </SkeletonContent>
-                    console.log(`${loading}`)
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Text>Loading</Text>
+                    </View>
 
             }
 

@@ -3,7 +3,7 @@ import { DJANGO_API_ENDPOINT } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-console.log(`${DJANGO_API_ENDPOINT}/api/user/login/`)
+// console.log(`${DJANGO_API_ENDPOINT}/api/user/login/`)
 
 
 
@@ -38,12 +38,10 @@ export const AuthProvider = ({ children }) => {
             .then(response => response.json())
             .then(async (data) => {
 
-                console.log(data)
 
                 if (data.msg == "Registration Success!") {
                     try {
                         let jsonVal = JSON.stringify(data)
-                        console.log(jsonVal)
                         await AsyncStorage.setItem('userToken', jsonVal, () => {
                             setUserToken(data)
                             setLoading(false);
@@ -90,7 +88,6 @@ export const AuthProvider = ({ children }) => {
 
                     try {
                         let jsonVal = JSON.stringify(data)
-                        console.log(jsonVal)
                         await AsyncStorage.setItem('userToken', jsonVal, () => {
                             setUserToken(data)
                             setLoading(false)
@@ -126,11 +123,9 @@ export const AuthProvider = ({ children }) => {
 
             let tokenData = await AsyncStorage.getItem('userToken');
             tokenData = JSON.parse(tokenData);
-            console.log(tokenData, "tokenData")
 
             if (tokenData) {
                 setUserToken(tokenData);
-                console.log("retirve saved token loggedIn")
 
             }
 
@@ -184,9 +179,7 @@ export const AuthProvider = ({ children }) => {
         AsyncStorage.multiRemove(["userToken", "userInfo"], () => {
             setUserInfo(null);
             setUserToken(null);
-            console.log('success to logout')
         }).catch(err => {
-            console.log('failed to logout')
             Alert.alert("Error", String(err))
         })
     }

@@ -21,7 +21,7 @@ function Help2() {
 
     // bottom sheet variable
     const bottomSheetRef = useRef(null);
-    const snapPoints = useMemo(() => [ '60%'], []);
+    const snapPoints = useMemo(() => [ '30%'], []);
 
     const { getRequestData, allRequestData, getRequestDataById } = useContext(HelpContext);
     const { userToken, setUserToken } = useContext(AuthContext);

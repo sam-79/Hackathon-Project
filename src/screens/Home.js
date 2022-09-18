@@ -1,6 +1,7 @@
 import React, { useContext, } from 'react';
-import { StyleSheet,Alert } from 'react-native';
+import { StyleSheet, Alert, Pressable, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Notifications from '../components/Notifications';
 import Dashboard from '../components/Dashboard';
@@ -16,7 +17,6 @@ import Tips from './Tips';
 import SOS from '../components/SOS';
 
 import CustomDrawer from '../components/CustomDrawer';
-
 
 import { AuthContext } from '../context/AuthContext';
 
@@ -42,27 +42,37 @@ export default function DrawerNavigation(params) {
             backBehavior='history'
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: '#6FD1F9',
+                    backgroundColor: '#3521b5',
                     elevation: 0,
                 },
                 headerTitleStyle: {
                     color: "white"
                 },
             }}
+
             drawerContent={(props) => <CustomDrawer {...props} />}
 
         >
 
+            <DrawerTab.Screen
+                name="Dashboard"
+                component={Dashboard}
+                options={({ navigation }) => {
+                    return {
+                        headerRight: () => (
+                            <Pressable onPress={() => { navigation.navigate("Notifications") }} style={{ marginRight: 20 }}>
+                                <MaterialCommunityIcons name='bell' color={'white'} size={25} />
+                            </Pressable>
+                        )
+                    }
+                }}
+            />
             <DrawerTab.Screen name="SIH HELP REQUEST" component={Help} />
 
             <DrawerTab.Screen name="CROWDSOURCE" component={Contribute} />
 
             <DrawerTab.Screen name="TIPS" component={Tips} />
 
-            <DrawerTab.Screen
-                name="Dashboard"
-                component={Dashboard}
-            />
 
             <DrawerTab.Screen name='Notifications'
                 component={Notifications}

@@ -31,6 +31,8 @@ function SafetyTips() {
             redirect: 'follow'
         };
 
+        // console.log(`${DJANGO_API_ENDPOINT}/api/floodmanagement/tips/?search=${(category) ? category : ''}`)
+
         fetch(`${DJANGO_API_ENDPOINT}/api/floodmanagement/tips/?search=${(category) ? category : ''}`, requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -74,7 +76,7 @@ function SafetyTips() {
             // </LinearGradient>
 
             <View style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', }}>
-                <Image resizeMode={"contain"} source={{ uri: item.image }} style={{ height: 200, width: "100%" }} />
+                <Image resizeMode={"contain"} source={{ uri: item.image }} style={{width: "100%",height:300, borderRadius:25 ,borderWidth:1,borderColor:'black' }} />
             </View >
         )
     }
@@ -104,7 +106,7 @@ function SafetyTips() {
                 <ActivityIndicator size={30} animating={isloading} />
             </View>
 
-            <View>
+            <View style={{marginBottom:100}}>
 
                 <FlatList
                     data={tipsResp}
